@@ -158,6 +158,8 @@ A description of the needed icon files is in the table below.
 
 To generate these icons, click on the WebNative extension in the left panel (WN) and click `Configuration`. Then click `Rebuild` next to `Splash Screen and Icon`. Wait for this to finish, then sync the files with the `Sync` button or `npx cap sync`. Then, follow the [Building and Releasing](#building-and-releasing) directions below.
 
+Android has a built-in icon manager that is described [here](https://developer.android.com/studio/write/create-app-icons) and is better for updating the android icon.
+
 ### App Name
 To change the name of the app when installed on Android, like the display name on the homescreen, go to [android\app\src\main\res\values\strings.xml](android\app\src\main\res\values\strings.xml) and edit the `app_name` and `title_activity_main` lines. Then, follow the [Building and Releasing](#building-and-releasing) directions below.
 

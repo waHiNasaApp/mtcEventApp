@@ -11,13 +11,18 @@
     },
     "PushNotifications": {
       "presentationOptions": ["badge", "sound", "alert"]
+    },
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_name",
+      "iconColor": "#488AFF"
     }
   },
   "server": {
     "url": "https://ianrom2.dreamhosters.com",
     "allowNavigation": [
       "ianrom2.dreamhosters.com",
-      "*.ianrom2.dreamhosters.com"
+      "*.ianrom2.dreamhosters.com",
+      "*.mtcscouting.org"
     ],
     "cleartext": true
   }
