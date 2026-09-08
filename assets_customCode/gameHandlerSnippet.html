@@ -113,6 +113,7 @@
       if (usersMet.length > 0) {
         // If the list has elements
         const ul = document.createElement('ul');
+        ul.className = 'nice-user-list';
 
         usersMet.forEach((user) => {
           const li = document.createElement('li');
@@ -122,10 +123,10 @@
 
         usersMetElement.appendChild(ul);
         document.querySelector('#userListHolder').style.display =
-          'inline-block';
+          'block';
       }
 
-      document.querySelector('#statsHolder').style.display = 'inline-block';
+      document.querySelector('#statsHolder').style.display = 'block';
     } catch (error) {
       Toast.show({ text: error.message });
     }
@@ -191,11 +192,12 @@
         } else {
           // If the list doesn't exist, create it and add the first item
           targetUl = document.createElement('ul');
+          targetUl.className = 'nice-user-list';
           targetUl.appendChild(newLi);
 
           container.appendChild(targetUl);
           document.querySelector('#userListHolder').style.display =
-            'inline-block';
+            'block';
         }
       } else {
         Toast.show({ text: result });
