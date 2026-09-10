@@ -8,7 +8,7 @@
   "functions": [
     {
       "source": "functions",
-      "codebase": "default",
+      "codebase": "mobile-app",
       "disallowLegacyRuntimeConfig": true,
       "ignore": [
         "node_modules",
@@ -34,15 +34,5 @@
       "port": 4400
     },
     "singleProjectMode": true
-  },
-  "hosting": {
-    "public": "public",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
   }
 }
