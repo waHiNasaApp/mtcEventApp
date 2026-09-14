@@ -109,6 +109,7 @@
 
       // Update the #usersMet element with a list
       const usersMetElement = document.querySelector('#insertUsersMet');
+      document.querySelector('#insertUsersMetCount').textContent = usersMet.length;
 
       if (usersMet.length > 0) {
         // If the list has elements
@@ -177,6 +178,10 @@
         // Update the #currentPoints element
         const pointsElement = document.querySelector('#insertCurrentPoints');
         pointsElement.textContent = newPoints;
+
+        // Update the number of users met
+        const countElement = document.querySelector('#insertUsersMetCount');
+        countElement.textContent = parseInt(countElement.textContent || 0) + 1;
 
         // Update the users met list
         const container = document.querySelector('#insertUsersMet');
