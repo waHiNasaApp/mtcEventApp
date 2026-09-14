@@ -46,6 +46,7 @@ exports.initializeUser = onCall(async (request) => {
       pointValueComment: '',
       usersMet: [],
       usersMetId: [],
+      numUsersMet: 0,
     });
 
     // Return the document name (ID)
@@ -85,6 +86,7 @@ exports.getUserData = onCall(async (request) => {
     return {
       currentPoints: data.currentPoints,
       usersMet: data.usersMet,
+      numUsersMet: data.numUsersMet,
     };
   } catch (error) {
     throw new HttpsError('internal', 'Unable to retrieve user data.', error);
@@ -141,6 +143,7 @@ exports.executeScan = onCall(async (request) => {
       const worthPoints = scannedData.worthPoints;
       const currentPoints = scannerData.currentPoints;
       const newPoints = currentPoints + worthPoints;
+      const numUsersMet = scannerData.numUsersMet;
 
       // Prepare the display name
       const userMetDisplayName = `${scannedData.firstName} ${scannedData.lastInitial}.`;
@@ -154,6 +157,7 @@ exports.executeScan = onCall(async (request) => {
         currentPoints: newPoints,
         usersMetId: FieldValue.arrayUnion(scannedUserId),
         usersMet: currentUsersMet,
+        numUsersMet: numUsersMet + 1,
       });
 
       return {
