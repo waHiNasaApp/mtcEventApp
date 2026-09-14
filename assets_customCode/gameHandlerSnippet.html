@@ -75,6 +75,37 @@
 
   // --- Functions ---
 
+  // Helper to clear invalid ID and resync
+  async function clearStoredFirebaseIdAndResync() {
+    console.log('Firebase ID not found. Clearing and resyncing...');
+    Toast.show({ text: 'Game user not found, creating new user' });
+    try {
+      const userId = wpUserData.userId;
+
+      // Clear the ACF field via REST API
+      await fetch(`${wpApiSettings.root}wp/v2/users/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-WP-Nonce': wpApiSettings.nonce,
+        },
+        body: JSON.stringify({
+          acf: {
+            field_69a87e04e3a06: '', // Clear the stored ID
+          },
+        }),
+      });
+
+      // Clear local memory state
+      wpUserData.firebaseDocId = null;
+
+      // Call sync to initialize a new user
+      await syncUserWithFirebase();
+    } catch (err) {
+      console.error('Failed to clear Firebase ID:', err);
+    }
+  }
+
   async function handleUserExists(wpUserData) {
     try {
       document.querySelector('#loadingIcon').style.display = 'none';
@@ -87,6 +118,7 @@
 
       // Create QR code
       const qrContainer = document.querySelector('#insertQrCode');
+      qrContainer.innerHTML = ''; // Prevent duplicate QR codes
       new QRCode(qrContainer, {
         text: wpUserData.firebaseDocId,
         width: 256,
@@ -109,27 +141,36 @@
 
       // Update the #usersMet element with a list
       const usersMetElement = document.querySelector('#insertUsersMet');
-      document.querySelector('#insertUsersMetCount').textContent = usersMet.length;
+      document.querySelector('#insertUsersMetCount').textContent =
+        usersMet.length;
 
       if (usersMet.length > 0) {
         // If the list has elements
         const ul = document.createElement('ul');
         ul.className = 'nice-user-list';
 
-        usersMet.forEach((user) => {
+        usersMet.forEach(user => {
           const li = document.createElement('li');
           li.textContent = user;
           ul.prepend(li);
         });
 
+        usersMetElement.innerHTML = ''; // Clear previous list elements in case of resync
         usersMetElement.appendChild(ul);
-        document.querySelector('#userListHolder').style.display =
-          'block';
+        document.querySelector('#userListHolder').style.display = 'block';
       }
 
       document.querySelector('#statsHolder').style.display = 'block';
     } catch (error) {
-      Toast.show({ text: error.message });
+      // Check if the error thrown indicates the document/user was not found
+      if (
+        error.message &&
+        error.message.toLowerCase().includes('unable to retrieve user data')
+      ) {
+        await clearStoredFirebaseIdAndResync();
+      } else {
+        Toast.show({ text: error.message });
+      }
     }
   }
 
@@ -201,8 +242,7 @@
           targetUl.appendChild(newLi);
 
           container.appendChild(targetUl);
-          document.querySelector('#userListHolder').style.display =
-            'block';
+          document.querySelector('#userListHolder').style.display = 'block';
         }
       } else {
         Toast.show({ text: result });
