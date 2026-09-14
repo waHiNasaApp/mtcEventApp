@@ -45,7 +45,7 @@ exports.initializeUser = onCall(async (request) => {
       worthPoints: DEFAULT_WORTH_POINTS,
       pointValueComment: '',
       usersMet: [],
-      usersMetIds: [],
+      usersMetId: [],
     });
 
     // Return the document name (ID)
