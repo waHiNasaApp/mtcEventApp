@@ -5,6 +5,7 @@ setGlobalOptions({
 });
 
 // The Firebase Admin SDK to access Firestore
+const admin = require('firebase-admin');
 const { onCall, HttpsError } = require('firebase-functions/v2/https');
 const { getFirestore, FieldValue } = require('firebase-admin/firestore');
 const { initializeApp } = require('firebase-admin/app');
@@ -25,6 +26,7 @@ const DEFAULT_WORTH_POINTS = 10;
 exports.initializeUser = onCall(async (request) => {
   // Extract parameters from the request data
   const { firstName, lastInitial, scoutingId, email } = request.data;
+  const createdAt = admin.firestore.FieldValue.serverTimestamp()
 
   // Basic validation to ensure all required fields are present
   if (!firstName || !lastInitial || !scoutingId || !email) {
@@ -37,16 +39,19 @@ exports.initializeUser = onCall(async (request) => {
   try {
     // Add a new document to the 'users' collection
     const docRef = await db.collection('users').add({
-      firstName,
-      lastInitial,
-      scoutingId,
-      email,
+      firstName: firstName,
+      firstNameLower: firstName.toLowerCase(),
+      lastInitial: lastInitial,
+      scoutingId: scoutingId,
+      email: email,
+      emailLower: email.toLowerCase(),
       currentPoints: 0,
       worthPoints: DEFAULT_WORTH_POINTS,
       pointValueComment: '',
       usersMet: [],
       usersMetId: [],
       numUsersMet: 0,
+      createdAt: createdAt,
     });
 
     // Return the document name (ID)
