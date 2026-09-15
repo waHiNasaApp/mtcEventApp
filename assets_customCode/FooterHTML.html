@@ -1,4 +1,6 @@
-<!-- Place the back button -->
+<!-- BACK BUTTON -->
+
+<!-- Add back button -->
 <a
   id="back-button"
   href="javascript:history.back()"
@@ -44,4 +46,84 @@
   if (/^\/(?:[^/]*\d{4}[^/]*\/?)?$/.test(path)) {
     document.getElementById('back-button').style.display = 'none';
   }
+</script>
+
+<!-- LOADING BAR (via NProgress) -->
+<!-- Load NProgress CSS & JS -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css"
+/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+
+<!-- NProgress Colors -->
+<style>
+  #nprogress .bar {
+    background: #003f87 !important;
+  }
+  #nprogress .peg {
+    box-shadow: 0 0 10px #003f87, 0 0 5px #003f87 !important;
+  }
+  #nprogress .spinner-icon {
+    border-top-color: #003f87 !important;
+    border-left-color: #003f87 !important;
+  }
+</style>
+
+<!-- NProgress Logic -->
+<script>
+  // Complete loading bar on initial page load
+  NProgress.start();
+  window.addEventListener('load', function () {
+    NProgress.done();
+  });
+
+  // Intercept all URL clicks
+  document.addEventListener('click', function (e) {
+    let target = e.target.closest('a');
+
+    if (target && target.href) {
+      // Exclude new tabs, modifier key clicks, and protocol links
+      if (
+        target.target === '_blank' ||
+        e.ctrlKey ||
+        e.metaKey ||
+        target.href.startsWith('mailto:') ||
+        target.href.startsWith('tel:') ||
+        target.href.startsWith('#')
+      ) {
+        return;
+      }
+      NProgress.start();
+    }
+  });
+
+  // Intercept browser-level back/forward navigation
+  window.addEventListener('popstate', function () {
+    NProgress.start();
+  });
+
+  // Fallback to finish the progress bar if navigating away takes too long
+  window.addEventListener('pagehide', function () {
+    NProgress.done();
+  });
+
+  // Clear the loading bar when the user returns to this tab
+  // This handles file previews, downloads, or external links that return focus
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible') {
+      NProgress.done();
+    }
+  });
+
+  window.addEventListener('focus', function () {
+    NProgress.done();
+  });
+  
+  // Extra fallback: when returning to the page via back/forward cache (bfcache)
+  window.addEventListener('pageshow', function (e) {
+    if (e.persisted) {
+      NProgress.done();
+    }
+  });
 </script>
