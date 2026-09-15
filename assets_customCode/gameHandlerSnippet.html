@@ -30,8 +30,7 @@
         const functionResult = await FirebaseFunctions.callByName({
           name: 'initializeUser',
           data: {
-            firstName: wpUserData.firstName,
-            lastInitial: wpUserData.lastInitial,
+            fullName: wpUserData.firstName + " " + wpUserData.lastInitial + ".",
             scoutingId: wpUserData.scoutingId,
             email: wpUserData.email,
           },

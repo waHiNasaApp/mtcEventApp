@@ -20,16 +20,16 @@ const DEFAULT_WORTH_POINTS = 10;
  * Creates a new user in Firestore with the default settings
  * Returns the new document id
  *
- * @params {firstName, lastInitial, scoutingId, email}
+ * @params {fullName, scoutingId, email}
  * @returns {id}
  */
 exports.initializeUser = onCall(async (request) => {
   // Extract parameters from the request data
-  const { firstName, lastInitial, scoutingId, email } = request.data;
+  const { fullName, scoutingId, email } = request.data;
   const createdAt = admin.firestore.FieldValue.serverTimestamp()
 
   // Basic validation to ensure all required fields are present
-  if (!firstName || !lastInitial || !scoutingId || !email) {
+  if (!fullName || !scoutingId || !email) {
     throw new HttpsError(
       'invalid-argument',
       'The function must be called with all params',
@@ -39,9 +39,8 @@ exports.initializeUser = onCall(async (request) => {
   try {
     // Add a new document to the 'users' collection
     const docRef = await db.collection('users').add({
-      firstName: firstName,
-      firstNameLower: firstName.toLowerCase(),
-      lastInitial: lastInitial,
+      fullName: fullName,
+      fullNameLower: fullName.toLowerCase(),
       scoutingId: scoutingId,
       email: email,
       emailLower: email.toLowerCase(),
@@ -54,7 +53,7 @@ exports.initializeUser = onCall(async (request) => {
       createdAt: createdAt,
     });
 
-    // Return the document name (ID)
+    // Return the document (ID)
     return { id: docRef.id };
   } catch (error) {
     throw new HttpsError('internal', 'Unable to initialize user.', error);
@@ -149,13 +148,11 @@ exports.executeScan = onCall(async (request) => {
       const currentPoints = scannerData.currentPoints;
       const newPoints = currentPoints + worthPoints;
       const numUsersMet = scannerData.numUsersMet;
-
-      // Prepare the display name
-      const userMetDisplayName = `${scannedData.firstName} ${scannedData.lastInitial}.`;
+      const userMetName = scannedData.fullName;
 
       // Prepare the usersMet array
       const currentUsersMet = scannerData.usersMet;
-      currentUsersMet.push(userMetDisplayName);
+      currentUsersMet.push(userMetName);
 
       // Update the scanner's document
       transaction.update(scannerRef, {
@@ -169,7 +166,7 @@ exports.executeScan = onCall(async (request) => {
         result: 'Success',
         addedPoints: worthPoints,
         newPoints: newPoints,
-        userMet: userMetDisplayName,
+        userMet: userMetName,
       };
     });
 
