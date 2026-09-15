@@ -30,7 +30,7 @@
         const functionResult = await FirebaseFunctions.callByName({
           name: 'initializeUser',
           data: {
-            fullName: wpUserData.firstName + " " + wpUserData.lastInitial + ".",
+            fullName: wpUserData.firstName + ' ' + wpUserData.lastInitial + '.',
             scoutingId: wpUserData.scoutingId,
             email: wpUserData.email,
           },
@@ -195,6 +195,11 @@
 
   async function handleCodeScanned(scannerCode, scannedCode) {
     try {
+      if (scannerCode == scannedCode) {
+        Toast.show({ text: 'You cannot scan yourself...' });
+        return;
+      }
+
       // Call Firebase Function
       const functionResult = await FirebaseFunctions.callByName({
         name: 'executeScan',
