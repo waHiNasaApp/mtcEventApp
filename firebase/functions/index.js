@@ -26,7 +26,7 @@ const DEFAULT_WORTH_POINTS = 10;
 exports.initializeUser = onCall(async (request) => {
   // Extract parameters from the request data
   const { fullName, scoutingId, email } = request.data;
-  const createdAt = admin.firestore.FieldValue.serverTimestamp()
+  const createdAt = admin.firestore.FieldValue.serverTimestamp();
 
   // Basic validation to ensure all required fields are present
   if (!fullName || !scoutingId || !email) {
@@ -49,6 +49,7 @@ exports.initializeUser = onCall(async (request) => {
       pointValueComment: '',
       usersMet: [],
       usersMetId: [],
+      usersMetPoints: [],
       numUsersMet: 0,
       createdAt: createdAt,
     });
@@ -90,6 +91,7 @@ exports.getUserData = onCall(async (request) => {
     return {
       currentPoints: data.currentPoints,
       usersMet: data.usersMet,
+      usersMetPoints: data.usersMetPoints,
       numUsersMet: data.numUsersMet,
     };
   } catch (error) {
@@ -152,13 +154,16 @@ exports.executeScan = onCall(async (request) => {
 
       // Prepare the usersMet array
       const currentUsersMet = scannerData.usersMet;
+      const currentUsersMetPoints = scannerData.usersMetPoints;
       currentUsersMet.push(userMetName);
+      currentUsersMetPoints.push(worthPoints);
 
       // Update the scanner's document
       transaction.update(scannerRef, {
         currentPoints: newPoints,
         usersMetId: FieldValue.arrayUnion(scannedUserId),
         usersMet: currentUsersMet,
+        usersMetPoints: currentUsersMetPoints,
         numUsersMet: numUsersMet + 1,
       });
 

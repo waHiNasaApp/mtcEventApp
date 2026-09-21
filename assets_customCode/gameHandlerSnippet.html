@@ -132,7 +132,7 @@
       });
 
       // Extract the returned data from the functionResult object
-      const { currentPoints, usersMet } = functionResult.data;
+      const { currentPoints, usersMet, usersMetPoints } = functionResult.data;
 
       // Update the #currentPoints element
       const pointsElement = document.querySelector('#insertCurrentPoints');
@@ -148,9 +148,9 @@
         const ul = document.createElement('ul');
         ul.className = 'nice-user-list';
 
-        usersMet.forEach(user => {
+        usersMet.forEach((user, index) => {
           const li = document.createElement('li');
-          li.textContent = user;
+          li.textContent = `${user} - ${usersMetPoints[index]} pts`;
           ul.prepend(li);
         });
 
@@ -234,7 +234,7 @@
 
         // Create the new <li> element
         const newLi = document.createElement('li');
-        newLi.textContent = userMet;
+        newLi.textContent = `${userMet} - ${addedPoints} pts`;
 
         if (targetUl) {
           // If the list already exists, add to the top
