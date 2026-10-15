@@ -48,6 +48,16 @@
   }
 </script>
 
+<!-- ASSIGN NOTIFICATION TOPIC -->
+<script>
+  // Add to the "all-users" group
+  try {
+    await FirebaseMessaging.subscribeToTopic({ topic: 'all-users' });
+  } catch (error) {
+    Toast.show({ text: 'Error: ' + error.message });
+  }
+</script>
+
 <!-- LOADING BAR (via NProgress) -->
 <!-- Load NProgress CSS & JS -->
 <link
@@ -119,7 +129,7 @@
   window.addEventListener('focus', function () {
     NProgress.done();
   });
-  
+
   // Extra fallback: when returning to the page via back/forward cache (bfcache)
   window.addEventListener('pageshow', function (e) {
     if (e.persisted) {
