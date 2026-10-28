@@ -7,4 +7,5 @@ const App = window.Capacitor.Plugins.App;
 const BarcodeScanner = window.Capacitor.Plugins.CapacitorBarcodeScanner;
 const Browser = window.Capacitor.Plugins.Browser;
 const Dialog = window.Capacitor.Plugins.Dialog;
+const Device = window.Capacitor.Plugins.Device;
 const Geolocate = window.Capacitor.Plugins.Geolocation;

@@ -1,6 +1,6 @@
 # Middle Tennessee Council Event App <!-- omit in toc -->
 
-**Last updated August 28, 2026**
+**Last updated October 28, 2026**
 
 > The Github Repository for this project is [here](https://github.com/SAPIENTI0R/mtcEventAppDev).
 
@@ -120,7 +120,8 @@ The documentation for the first-party plugins is available [here](https://capaci
 | **@capacitor/barcode-scanner**     | Scanning barcodes for the game                            | `.CapacitorBarcodeScanner`                   |
 | **@capacitor/browser**             | Opening links, particularly to files                      | `.Browser`                                   |
 | **@capacitor/dialog**              | Sending dialog popup messages, mostly for debugging       | `.Dialog`                                    |
-| **@capacitor/geolocation**         | Used for the map                                                    | `.Geolocation`                               |
+| **@capacitor/device**              | Gettice the current operating system                      | `.Device`                                    |
+| **@capacitor/geolocation**         | Used for the map                                          | `.Geolocation`                               |
 | **@capacitor/haptics**             | Haptic feedback, used after a successful barcode scan     | `.Haptics`                                   |
 | **@capacitor/toast**               | Sends toast messages. Used in the game and for debugging` | `.Toast`                                     |
 | **@capacitor/local-notifications** | Unused                                                    | `.`                                          |
