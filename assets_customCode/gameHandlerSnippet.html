@@ -161,10 +161,12 @@
 
       document.querySelector('#statsHolder').style.display = 'block';
     } catch (error) {
-      // Check if the error thrown indicates the document/user was not found
+      const errorMsg = error.message ? error.message.toLowerCase() : '';
+
+      // Catch Android's specific string AND iOS's generic 'internal' string
       if (
-        error.message &&
-        error.message.toLowerCase().includes('unable to retrieve user data')
+        errorMsg.includes('unable to retrieve user data') ||
+        errorMsg.includes('internal')
       ) {
         await clearStoredFirebaseIdAndResync();
       } else {
@@ -175,21 +177,26 @@
 
   async function scanCode() {
     try {
-      // Trigger the scan
+      // Trigger the scan directly. The plugin handles permissions automatically.
       const result = await BarcodeScanner.scanBarcode({
-        hint: 17, // 17 = Scan all barcode types
-        cameraDirection: 1, // 1 = Back camera
+        hint: 17, // 17 = ALL formats
+        cameraDirection: 1, // 1 = BACK camera
+        scanOrientation: 3, // 3 = ADAPTIVE
         scanInstructions:
-          "Point at another user's barcode\n\nPress the bottom button to scan",
-        scanButton: true, // Shows a manual cancel/scan button
+          "Point at another user's barcode to scan",
+        scanButton: true,
+        scanText: 'Scan',
+        scanButtonText: 'Scan',
       });
 
-      // Handle the result
       const scannedCode = result.ScanResult;
       Haptics.notification({ type: 'SUCCESS' });
       await handleCodeScanned(wpUserData.firebaseDocId, scannedCode);
     } catch (error) {
       console.error('Scanner error:', error);
+      Toast.show({
+        text: `Scanner Error: ${error.message || JSON.stringify(error)}`,
+      });
     }
   }
 
