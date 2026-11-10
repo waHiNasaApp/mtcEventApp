@@ -10,11 +10,8 @@ async function getFirebaseID() {
     const result = await FirebaseMessaging.getToken();
 
     const firebaseIDElement = document.getElementById('firebaseID');
-    if (firebaseIDElement) {
-      firebaseIDElement.innerHTML =
-        firebaseIDElement.innerHTML + '\n' + result.token;
-      firebaseIDElement.style.wordBreak = 'break-word';
-    }
+    firebaseIDElement.innerHTML =
+      `<b>${firebaseIDElement.textContent.trim()}</b> ${result.token}`.trim();
   } catch (error) {
     ((firebaseIDElement.innerHTML = 'Error getting Firebase ID:'), error);
   }
